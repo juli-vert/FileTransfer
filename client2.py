@@ -4,8 +4,11 @@ import socket
 
 # open a socket connected to the server port
 sock = socket.socket()
-host = "127.0.0.1" #if the client is not running on the same server change the ip address
-port = 8888
+host = "192.168.1.34" #if the client is not running on the same server change the ip address
+port = 22882
+
+host = input("Enter the ip address of the server that you wanna connect to: ")
+port = int(input("Enter the port of the server: "))
 
 bsize = 1024	
 # request for the directory
@@ -21,7 +24,7 @@ opt = input("Select which file you want to download\n")
 sock.send(opt.encode())
 
 # get the data
-with open('rfile', 'wb') as f:
+with open('rfile2', 'wb') as f:
     print ('Opening file...')
     while True:
         print ('Getting new data...')

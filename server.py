@@ -25,15 +25,14 @@ class mainServer(object):
     def runServer(self):
         # loop to get a connection
         while True:
+            print ("waiting for connections...")
             (conn, (ip,port)) = self.sock.accept()
             conn.settimeout(360)
 
             threading.Thread(target = ServerThread, args = (conn,ip,port)).start()
-            '''thr = ServerThread(ip,port)
-            thr.runServer(str(ip)+str(port))'''
 
-            if input():
-                break
+            '''if input() == "q":
+                break'''
 
 class ServerThread(object):
     
@@ -41,27 +40,26 @@ class ServerThread(object):
         self.ip = ip
         self.port = port
         print ('{0}-{1}:{2}'.format("New client connected",str(ip),str(port)))
-        self.runThread(conn,str(ip)+str(port))
+        self.runThread(conn,'{0}:{1}'.format(str(ip),str(port)))
 
     def runThread(self,conn,addr):
         while True:
             print  ('Connected from', addr)
             data = conn.recv(bsize)
-            print ('Data received from client', repr(data))
+            print ('Data received from client', repr(data.decode()))
 
             dirs = os.listdir(fpath)
 
-            print (len(dirs))
             ldir = dirs[0]
             for i in range(1,len(dirs)):
                 ldir = '{0}{1}{2}'.format(ldir,"\n",dirs[i])
 
-            print (ldir)
             conn.send(ldir.encode())
 
-            print ("File selected")
+            
             fl = '{0}{1}'.format(fpath,conn.recv(bsize).decode())
-
+            print ("File selected by: ", repr(addr))
+            
             # open the selected file and send the data across
             f = open(fl,'rb')
             payload = f.read(bsize)
@@ -77,6 +75,7 @@ class ServerThread(object):
             conn.close()
             break  
 
-
-srv = mainServer(host,port)
+host = input("Enter your ip address: ")
+port = input("Enter the port that you wanna use for the server: ")
+srv = mainServer(host,int(port))
 

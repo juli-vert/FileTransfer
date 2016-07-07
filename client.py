@@ -7,12 +7,19 @@ host = socket.gethostname()
 port = 22882
 
 sock.connect((host,port))
-sock.send("connecting...")
+sock.send("which files do you have for me?".encode())
+
+
+dirs = sock.recv(1024)
+print (dirs.decode())
+
+opt = input("Select which file you want to download\n")
+sock.send(opt.encode())
 
 with open('rfile', 'wb') as f:
-        print 'Opening file...'
+        print ('Opening file...')
         while True:
-                print 'Getting new data...'
+                print ('Getting new data...')
                 data = sock.recv(1024)
                 print('data=%s', (data))
                 if not data:
@@ -21,4 +28,4 @@ with open('rfile', 'wb') as f:
 f.close()
 print('Transfer done')
 sock.close()
-print 'Closing...'
+print ('Closing...')

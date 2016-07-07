@@ -7,13 +7,12 @@ sock = socket.socket()
 host = "192.168.1.34" #if the client is not running on the same server change the ip address
 port = 22882
 
-bsize = 1024	
 # request for the directory
 sock.connect((host,port))
 sock.send("which files do you have for me?".encode())
 
 
-dirs = sock.recv(bsize)
+dirs = sock.recv(1024)
 print (dirs.decode())
 
 # select the file and send the choice to the server
@@ -25,7 +24,7 @@ with open('rfile', 'wb') as f:
     print ('Opening file...')
     while True:
         print ('Getting new data...')
-        data = sock.recv(bsize)
+        data = sock.recv(1024)
         print('data=%s', (data))
         if not data:
                 break
